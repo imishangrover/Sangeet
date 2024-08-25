@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sangeet/core/configs/theme/app_theme.dart';
+import 'package:sangeet/presentation/splash/pages/splash.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,7 +14,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const Scaffold()
+      home: SplashPage()
       );
   }
 }
