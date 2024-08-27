@@ -6,6 +6,7 @@ import 'package:sangeet/common/widgets/button/basic_app_button.dart';
 import 'package:sangeet/core/configs/assets/app_images.dart';
 import 'package:sangeet/core/configs/assets/app_vectors.dart';
 import 'package:sangeet/core/configs/theme/app_colors.dart';
+import 'package:sangeet/presentation/auth/pages/signin_or_signout.dart';
 import 'package:sangeet/presentation/choose_mode/block/theme_cubit.dart';
 
 class ChooseModePage extends StatelessWidget {
@@ -125,7 +126,7 @@ class ChooseModePage extends StatelessWidget {
                       Navigator.push(
                         context, 
                         MaterialPageRoute(
-                          builder: (BuildContext context) => const ChooseModePage(),
+                          builder: (BuildContext context) => const SigninOrSignout(),
                         )
                       );
                     }, 
