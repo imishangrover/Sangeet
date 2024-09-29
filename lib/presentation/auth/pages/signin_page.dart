@@ -147,7 +147,7 @@ class SigninPage extends StatelessWidget {
           const Text('Not A Member'),
           TextButton(
             onPressed: (){
-              Navigator.push(
+              Navigator.pushReplacement(
                                 context, 
                                 MaterialPageRoute(
                                   builder: (BuildContext context) => const SignupPage(),
