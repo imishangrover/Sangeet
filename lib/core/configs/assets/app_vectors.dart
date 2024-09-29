@@ -8,4 +8,6 @@ class AppVectors
   static const String sun = '${basePath}Sun$format';
   static const String top_pattern = '${basePath}top_pattern$format';
   static const String botterm_pattern = '${basePath}bottem_pattern$format';
+  static const String line = '${basePath}Line$format';
+  static const String google = '${basePath}Google$format';
 }
