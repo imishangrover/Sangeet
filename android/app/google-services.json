@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340273503651",
+    "project_id": "sangeet-5edb4",
+    "storage_bucket": "sangeet-5edb4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340273503651:android:54247db3eb1daef3584e16",
+        "android_client_info": {
+          "package_name": "com.IshanGrover.sangeet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDC52wPqrxCXOCBMIF6mvE4VikcyOzkD58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

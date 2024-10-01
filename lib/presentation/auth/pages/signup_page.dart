@@ -4,9 +4,15 @@ import 'package:sangeet/common/widgets/button/basic_app_button.dart';
 import 'package:sangeet/core/configs/assets/app_vectors.dart';
 import 'package:sangeet/presentation/auth/pages/signin_page.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  bool passwordVisibility = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,32 +29,35 @@ class SignupPage extends StatelessWidget {
           horizontal: 20,
           vertical: 20,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _registerText(),
-            const SizedBox(height: 10,),
-            _support(),
-            const SizedBox(height: 10,),
-            _fullNameFild(context),
-            const SizedBox(height: 20,),
-            _eMailFild(context),
-            const SizedBox(height: 20,),
-            _passwordFild(context),
-            const SizedBox(height: 20,),
-            BasicAppButton(
-              onPressed: (){},
-              title: 'Creat Account',
-            ),
-            const SizedBox(height: 20,),
-            _or(),
-            const SizedBox(height: 10,),
-            _googleIcon(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _registerText(),
+              const SizedBox(height: 10,),
+              _support(),
+              const SizedBox(height: 10,),
+              _fullNameFild(context),
+              const SizedBox(height: 20,),
+              _eMailFild(context),
+              const SizedBox(height: 20,),
+              _passwordFild(context),
+              const SizedBox(height: 20,),
+              BasicAppButton(
+                onPressed: (){},
+                title: 'Create Account',
+              ),
+              const SizedBox(height: 20,),
+              _or(),
+              const SizedBox(height: 10,),
+              _googleIcon(),
+            ],
+          ),
         ),
       ),
     );
   }
+
   Widget _registerText()
   {
     return const Text(
@@ -101,11 +110,20 @@ class SignupPage extends StatelessWidget {
   Widget _passwordFild(BuildContext context)
   {
     return TextField(
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        suffixIcon: IconButton(
+          onPressed: (){
+            setState(() {
+              passwordVisibility = !passwordVisibility;
+            });
+          },
+          icon: Icon(passwordVisibility ? Icons.visibility_outlined : Icons.visibility_off_outlined)
+        ),
         hintText: 'Password',
       ).applyDefaults(
         Theme.of(context).inputDecorationTheme
-      )
+      ),
+      obscureText: !passwordVisibility,
     );
   }
 
