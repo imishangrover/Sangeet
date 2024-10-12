@@ -1,47 +1,123 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sangeet/data/models/auth/create_user_req.dart';
+import 'package:sangeet/data/models/auth/signin_user_req.dart';
 
 abstract class AuthfirebaseService{
 
-  Future<void> signin();
+  Future<Either<String,String>> signin(SigninUserReq signinUserReq);
 
-  Future<Either> signup(CreateUserReq createUserReq);
+  Future<Either<String,String>> signup(CreateUserReq createUserReq);
 }
 
 class AuthFirebaseServiceImpl extends AuthfirebaseService{
-  @override
-  Future<void> signin() {
-    // TODO: implement signin
-    throw UnimplementedError();
-  }
+  final FirebaseAuth _firebaseAuth;
 
+  AuthFirebaseServiceImpl(this._firebaseAuth);
   @override
-  Future<Either> signup(CreateUserReq createUserReq) async{
+
+  //Signin method 
+
+  Future<Either<String,String>> signin(SigninUserReq signinUserReq) async {
     try {
+      // it provide the list of account existes in database
+      final List<String> methods = await _firebaseAuth.fetchSignInMethodsForEmail(signinUserReq.email);
 
-      FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: createUserReq.email, 
-        password: createUserReq.password 
+      if(methods.isNotEmpty)
+      {
+        // it haandels the error 
+        return const Left('No account found for this email.');
+      }
+
+      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: signinUserReq.email, 
+        password: signinUserReq.password 
       );
-      return const Right('Signup is successfull');
+      // email verifiaction
+      
+      if (userCredential.user  != null && !userCredential.user!.emailVerified) {
+        await userCredential.user!.sendEmailVerification();
+        return const Right('Signin is successful. A verification email has been sent.');
+      }
+
+      return const Right('Signin is successful');
       
     } on FirebaseAuthException catch (e) {
 
       String message = '';
 
-      if(e.code == 'week-password')
+      if(e.code == 'user-not-found')
       {
-        message = 'The password is too week';
+        message = 'Not user found for that email';
       }
-      else if(e.code == 'email-already-in-use')
+      else if(e.code == 'wrong-password')
       {
-        message = 'Account already exist';
+        message = 'Wrong password provided for that email';
+      }
+      else
+      {
+        message = 'An error occurred while creating the account: ${e.code}';
       }
 
       return Left(message);
       
     }
+    catch(e){
+      return Left('An error occurred: $e');
+    }
+  }
+
+
+  //signup method
+  @override
+  Future<Either<String,String>> signup(CreateUserReq createUserReq) async{
+    try {
+      // it provide the list of account existes in database
+      final List<String> methods = await _firebaseAuth.fetchSignInMethodsForEmail(createUserReq.email);
+
+      if(methods.isNotEmpty)
+      {
+        // it haandels the error 
+        return const Left('Email already exists');
+      }
+
+      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: createUserReq.email, 
+        password: createUserReq.password 
+      );
+      // email verifiaction
+      
+      if (userCredential.user  != null && !userCredential.user!.emailVerified) {
+        await userCredential.user!.sendEmailVerification();
+        return const Right('Signup is successful. A verification email has been sent.');
+      }
+
+      return const Right('Signup is successful');
+      
+    } on FirebaseAuthException catch (e) {
+
+      String message = '';
+
+      if(e.code == 'weak-password')
+      {
+        message = 'The password is too weak';
+      }
+      else if(e.code == 'email-already-in-use')
+      {
+        message = 'Account already exist';
+      }
+      else
+      {
+        message = 'An error occurred while creating the account: ${e.code}';
+      }
+
+      return Left(message);
+      
+    }
+    catch(e){
+      return Left('An error occurred: $e');
+    }
+    
   }
 
 }

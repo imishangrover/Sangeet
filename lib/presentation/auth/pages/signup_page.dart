@@ -68,7 +68,7 @@ class _SignupPageState extends State<SignupPage> {
                       Navigator.pushAndRemoveUntil(
                         context, 
                         MaterialPageRoute(builder: (BuildContext context) => const RootPage()), 
-                        (Route) => false
+                        (Route<dynamic> route) => false,
                       );
                     },
                   );
@@ -133,7 +133,8 @@ class _SignupPageState extends State<SignupPage> {
         hintText: 'Enter Email',
       ).applyDefaults(
         Theme.of(context).inputDecorationTheme
-      )
+      ),
+      keyboardType: TextInputType.emailAddress,
     );
   }
 
@@ -155,6 +156,7 @@ class _SignupPageState extends State<SignupPage> {
         Theme.of(context).inputDecorationTheme
       ),
       obscureText: !passwordVisibility,
+      keyboardType: TextInputType.visiblePassword,
     );
   }
 
@@ -179,7 +181,9 @@ class _SignupPageState extends State<SignupPage> {
   Widget _googleIcon()
   {
     return IconButton(
-      onPressed: (){}, 
+      onPressed: (){
+        
+      }, 
       icon: Image.asset(AppVectors.google)
     );
   }
@@ -197,7 +201,7 @@ class _SignupPageState extends State<SignupPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => const SigninPage()
+                  builder: (BuildContext context) => SigninPage()
                 )
               );
             },

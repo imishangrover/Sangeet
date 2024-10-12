@@ -2,10 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:sangeet/common/widgets/appbar/app_bar.dart';
 import 'package:sangeet/common/widgets/button/basic_app_button.dart';
 import 'package:sangeet/core/configs/assets/app_vectors.dart';
+import 'package:sangeet/data/models/auth/signin_user_req.dart';
+import 'package:sangeet/domain/usecases/auth/signin.dart';
 import 'package:sangeet/presentation/auth/pages/signup_page.dart';
+import 'package:sangeet/presentation/root/pages/root.dart';
+import 'package:sangeet/service_locator.dart';
 
-class SigninPage extends StatelessWidget {
+class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
+
+  @override
+  State<SigninPage> createState() => _SigninPageState();
+}
+
+class _SigninPageState extends State<SigninPage> {
+  final TextEditingController _email = TextEditingController();
+
+  final TextEditingController _password = TextEditingController();
+
+  bool passwordVisibility = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,32 +38,55 @@ class SigninPage extends StatelessWidget {
           horizontal: 20,
           vertical: 20,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _signInText(),
-            const SizedBox(height: 10,),
-            _support(),
-            const SizedBox(height: 10,),
-            _fullNameFild(context),
-            const SizedBox(height: 20,),
-            _passwordFild(context),
-            const SizedBox(height: 20,),
-            BasicAppButton(
-              onPressed: (){},
-              title: 'Sign In',
-            ),
-            const SizedBox(height: 20,),
-            _forgotPassword(),
-            const SizedBox(height: 20,),
-            _or(),
-            const SizedBox(height: 10,),
-            _googleIcon(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _signInText(),
+              const SizedBox(height: 10,),
+              _support(),
+              const SizedBox(height: 10,),
+              _fullNameFild(context),
+              const SizedBox(height: 20,),
+              _passwordFild(context),
+              const SizedBox(height: 20,),
+              BasicAppButton(
+                onPressed: () async{
+                  var result = await sl<SigninUseCase>().call(
+                    params: SigninUserReq(
+                      email: _email.text.toString(), 
+                      password: _password.text.toString(),
+                    )
+                  );
+                  result.fold(
+                    (l){
+                      var snackBar = SnackBar(content: Text(l));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    },
+                    (r){
+                      Navigator.pushAndRemoveUntil(
+                        context, 
+                        MaterialPageRoute(builder: (BuildContext context) => const RootPage()), 
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                  );
+                },
+                title: 'Sign In',
+              ),
+              const SizedBox(height: 20,),
+              _forgotPassword(),
+              const SizedBox(height: 20,),
+              _or(),
+              const SizedBox(height: 10,),
+              _googleIcon(),
+            ],
+          ),
         ),
       ),
     );
   }
+
   Widget _signInText()
   {
     return const Text(
@@ -79,34 +117,49 @@ class SigninPage extends StatelessWidget {
   Widget _fullNameFild(BuildContext context)
   {
     return TextField(
+      controller: _email,
       decoration: const InputDecoration(
-        hintText: 'Enter Username or Email',
+        hintText: 'Enter Email',
       ).applyDefaults(
         Theme.of(context).inputDecorationTheme
-      )
+      ),
+      keyboardType: TextInputType.emailAddress,
     );
   }
-
 
   Widget _passwordFild(BuildContext context)
   {
     return TextField(
-      decoration: const InputDecoration(
+      controller: _password,
+      decoration: InputDecoration(
+        suffixIcon: IconButton(
+          onPressed: (){
+            setState(() {
+              passwordVisibility = !passwordVisibility;
+            });
+          },
+          icon: Icon(passwordVisibility ? Icons.visibility_outlined : Icons.visibility_off_outlined)
+        ),
         hintText: 'Password',
       ).applyDefaults(
         Theme.of(context).inputDecorationTheme
-      )
+      ),
+      obscureText: !passwordVisibility,
+      keyboardType: TextInputType.visiblePassword,
     );
   }
 
   Widget _forgotPassword()
   {
     // TODO Apply functionality 
-    return const Align(
+    return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Text('Forgot password')
+        child: TextButton(
+          onPressed: () {},
+          child: const Text('Forgot password')
+        )
       )
     );
   }
@@ -150,7 +203,7 @@ class SigninPage extends StatelessWidget {
               Navigator.pushReplacement(
                                 context, 
                                 MaterialPageRoute(
-                                  builder: (BuildContext context) => SignupPage(),
+                                  builder: (BuildContext context) => const SignupPage(),
                                 )
                               );
             },
