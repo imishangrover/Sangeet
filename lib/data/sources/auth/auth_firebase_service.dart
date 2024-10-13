@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sangeet/data/models/auth/create_user_req.dart';
@@ -81,16 +82,23 @@ class AuthFirebaseServiceImpl extends AuthfirebaseService{
         return const Left('Email already exists');
       }
 
-      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      var userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: createUserReq.email, 
         password: createUserReq.password 
       );
       // email verifiaction
       
-      if (userCredential.user  != null && !userCredential.user!.emailVerified) {
-        await userCredential.user!.sendEmailVerification();
-        return const Right('Signup is successful. A verification email has been sent.');
-      }
+      // if (userCredential.user  != null && !userCredential.user!.emailVerified) {
+      //   await userCredential.user!.sendEmailVerification();
+      //   return const Right('Signup is successful. A verification email has been sent.');
+      // }
+
+      await FirebaseFirestore.instance.collection('Users').add(
+        {
+          'name' : createUserReq.fullName,
+          'email' : userCredential.user?.email,
+        },
+      );
 
       return const Right('Signup is successful');
       
