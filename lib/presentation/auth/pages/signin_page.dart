@@ -5,8 +5,9 @@ import 'package:sangeet/core/configs/assets/app_vectors.dart';
 import 'package:sangeet/data/models/auth/signin_user_req.dart';
 import 'package:sangeet/domain/usecases/auth/signin.dart';
 import 'package:sangeet/presentation/auth/pages/signup_page.dart';
-import 'package:sangeet/presentation/root/pages/root.dart';
+import 'package:sangeet/presentation/home/pages/home.dart';
 import 'package:sangeet/service_locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -21,6 +22,11 @@ class _SigninPageState extends State<SigninPage> {
   final TextEditingController _password = TextEditingController();
 
   bool passwordVisibility = false;
+
+  Future _saveSignInState() async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isSignedIn', true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +52,9 @@ class _SigninPageState extends State<SigninPage> {
               const SizedBox(height: 10,),
               _support(),
               const SizedBox(height: 10,),
-              _fullNameFild(context),
+              _emailNameFild(context),
               const SizedBox(height: 20,),
-              _passwordFild(context),
+              _passwordField(context),
               const SizedBox(height: 20,),
               BasicAppButton(
                 onPressed: () async{
@@ -63,10 +69,11 @@ class _SigninPageState extends State<SigninPage> {
                       var snackBar = SnackBar(content: Text(l));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
-                    (r){
+                    (r) async{
+                      await _saveSignInState();
                       Navigator.pushAndRemoveUntil(
                         context, 
-                        MaterialPageRoute(builder: (BuildContext context) => const RootPage()), 
+                        MaterialPageRoute(builder: (BuildContext context) => const HomePage()), 
                         (Route<dynamic> route) => false,
                       );
                     },
@@ -114,7 +121,7 @@ class _SigninPageState extends State<SigninPage> {
             );
   }
 
-  Widget _fullNameFild(BuildContext context)
+  Widget _emailNameFild(BuildContext context)
   {
     return TextField(
       controller: _email,
@@ -127,7 +134,7 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
-  Widget _passwordFild(BuildContext context)
+  Widget _passwordField(BuildContext context)
   {
     return TextField(
       controller: _password,

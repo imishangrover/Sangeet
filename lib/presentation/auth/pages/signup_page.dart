@@ -5,8 +5,9 @@ import 'package:sangeet/core/configs/assets/app_vectors.dart';
 import 'package:sangeet/data/models/auth/create_user_req.dart';
 import 'package:sangeet/domain/usecases/auth/signup.dart';
 import 'package:sangeet/presentation/auth/pages/signin_page.dart';
-import 'package:sangeet/presentation/root/pages/root.dart';
+import 'package:sangeet/presentation/home/pages/home.dart';
 import 'package:sangeet/service_locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -16,9 +17,18 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+
   final TextEditingController _fullName = TextEditingController();
+
   final TextEditingController _email = TextEditingController();
+
   final TextEditingController _password = TextEditingController();
+
+  Future _saveSignInState() async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isSignedIn', true);
+  }
+
   bool passwordVisibility = false;
   @override
   Widget build(BuildContext context) {
@@ -64,10 +74,11 @@ class _SignupPageState extends State<SignupPage> {
                       var snackBar = SnackBar(content: Text(l));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
-                    (r){
+                    (r) async {
+                      await _saveSignInState();
                       Navigator.pushAndRemoveUntil(
                         context, 
-                        MaterialPageRoute(builder: (BuildContext context) => const RootPage()), 
+                        MaterialPageRoute(builder: (BuildContext context) => const HomePage()), 
                         (Route<dynamic> route) => false,
                       );
                     },

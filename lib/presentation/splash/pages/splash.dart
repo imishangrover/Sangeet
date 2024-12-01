@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sangeet/core/configs/assets/app_vectors.dart';
-import 'package:sangeet/presentation/intro/pages/get_started.dart';
+import 'package:sangeet/presentation/splash/pages/persistent_check.dart';
 
 
 class SplashPage extends StatefulWidget {
@@ -27,6 +27,6 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> redirect() async{
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) =>const  GetStartedPage()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) =>const PersistentCheck()));
   }
 }

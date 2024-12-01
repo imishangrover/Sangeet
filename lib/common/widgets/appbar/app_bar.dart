@@ -3,8 +3,13 @@ import 'package:sangeet/common/helper/is_dark_mode.dart';
 
 class BasicAppBar extends StatelessWidget implements PreferredSizeWidget{
   final Widget ? title;
+  final bool hideBack;
+  final List<Widget>? action;
+
   const BasicAppBar({
     this.title,
+    this.hideBack = false,
+    this.action,
     super.key
   });
 
@@ -15,7 +20,7 @@ class BasicAppBar extends StatelessWidget implements PreferredSizeWidget{
       elevation: 0,
       centerTitle: true,
       title: title ?? const Text(''),
-      leading: IconButton(
+      leading: hideBack ? null : IconButton(
         onPressed: (){
           Navigator.pop(context);
         },
@@ -33,6 +38,7 @@ class BasicAppBar extends StatelessWidget implements PreferredSizeWidget{
           ),
         )
       ),
+      actions: action,
     );
   }
   
