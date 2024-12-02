@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: BasicAppBar(
         hideBack: true,
@@ -60,28 +60,38 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget _tabs()
   {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: TabBar(
         controller: _tabController,
         //isScrollable: true,
         labelColor: context.isDarkMode  ? Colors.white : Colors.black,
         indicatorColor: AppColors.primary,
+        indicatorWeight: 3.0,
+        
         tabs: const [
-          Text(
-            'News',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Tab(
+            child: Text(
+              'Songs',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
-          Text(
-            'Videos',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Tab(
+            child: Text(
+              'Videos',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
-          Text(
-            'Artist',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Tab(
+            child: Text(
+              'Artist',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
-          Text(
-            'Podcast',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Tab(
+            child: Text(
+              'Podcast',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
         ]
       ),

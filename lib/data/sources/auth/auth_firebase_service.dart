@@ -26,7 +26,7 @@ class AuthFirebaseServiceImpl extends AuthfirebaseService{
 
       if(methods.isNotEmpty)
       {
-        // it haandels the error 
+        // it handels the error 
         return const Left('No account found for this email.');
       }
 
@@ -86,12 +86,6 @@ class AuthFirebaseServiceImpl extends AuthfirebaseService{
         email: createUserReq.email, 
         password: createUserReq.password 
       );
-      // email verifiaction
-      
-      // if (userCredential.user  != null && !userCredential.user!.emailVerified) {
-      //   await userCredential.user!.sendEmailVerification();
-      //   return const Right('Signup is successful. A verification email has been sent.');
-      // }
 
       await FirebaseFirestore.instance.collection('Users').add(
         {
@@ -99,6 +93,13 @@ class AuthFirebaseServiceImpl extends AuthfirebaseService{
           'email' : userCredential.user?.email,
         },
       );
+
+      //email verifiaction
+      
+      if (userCredential.user  != null && !userCredential.user!.emailVerified) {
+        await userCredential.user!.sendEmailVerification();
+        return const Right('Signup is successful. A verification email has been sent.');
+      }
 
       return const Right('Signup is successful');
       
